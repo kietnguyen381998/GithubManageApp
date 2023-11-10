@@ -1,0 +1,26 @@
+<div class="repo-info-container">
+  <div class="search-container d-flex">
+    <input [(ngModel)]="this.repositoryName">
+    <button (click)="getRepository()">Click</button>
+    <div class="filter">
+      <button>Advanced Search</button>
+    </div>
+  </div>
+
+  <div class="main">
+    <div class="list-item" *ngFor="let d of dataList">
+      <div class="item">
+        <div class="title d-flex">
+          <div class="avatar"><img src="{{d.owner.avatar_url}}" alt=""></div>
+          <h3>{{d.owner.login}}</h3>
+        </div>
+        <span>{{d.description}}</span>
+        <div class="other d-flex">
+          <span>{{d.language}}</span>
+          <span>{{d.stargazers_count}}</span>
+          <span>{{d.pushed_at | datetime}}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
