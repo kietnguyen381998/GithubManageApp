@@ -15,17 +15,22 @@ export class RepositoriesInfoComponent implements OnInit {
   page: number = 1;
   perPage: number = 10;
   advancedFilter: any = [
+    {label: 'Owner', type: 'input', show: true},
     {label: 'Programming Language', type: 'select', show: true},
     {label: 'Minimum created date', type: 'datepicker', show: true},
     {label: 'Repositories size', type: 'slider', show: true},
   ]
 
-  dataList: any = [];
+  dataList: any[] = [];
+  languageList: any = [];
+
   constructor(private gitHubService: GithubService) {
   }
 
   ngOnInit(): void {
-
+    this.gitHubService.getLanguage().subscribe(res => {
+      this.languageList = res;
+    })
   }
 
 
@@ -37,6 +42,11 @@ export class RepositoriesInfoComponent implements OnInit {
         this.dataList = res.items
       }
     })
+  }
+
+  receiveSelectEvent(e: any, str: string) {
+    // @ts-ignore
+    this[str] = e;
   }
 
   eventButton(e: any) {

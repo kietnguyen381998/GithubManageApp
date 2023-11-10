@@ -36,4 +36,8 @@ export class GithubService {
     return this.http.get(url);
     // return this.http.get(`https://api.github.com/search/repositories?q=${repositoryName}&sort=updated&order=desc`);
   }
+
+  getLanguage() {
+    return this.http.get(`${this.apiUrl}/languages`);
+  }
 }

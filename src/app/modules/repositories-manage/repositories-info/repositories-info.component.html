@@ -1,14 +1,22 @@
 <div class="repo-info-container">
   <div class="search-container d-flex">
-    <input [(ngModel)]="this.repositoryName" (keypress)="eventButton($event)">
+    <input [(ngModel)]="repositoryName" (keypress)="eventButton($event)">
     <button (click)="getRepository()">Click</button>
     <div class="filter">
       <button>Advanced Search</button>
-      <div class="main" *ngFor="let a of advancedFilter">
-        <div class="item">
-          <label>{{a.label}}</label>
-        </div>
-      </div>
+    </div>
+  </div>
+
+  <div class="main" *ngFor="let a of advancedFilter">
+    <div class="item" *ngIf="a.type === 'input'">
+      <label>{{a.label}}</label>
+      <input [(ngModel)]="owner" (keypress)="eventButton($event)">
+    </div>
+    <div class="item" *ngIf="a.type === 'select'" >
+      <app-select-template (dataEvent)="receiveSelectEvent($event, 'language')"
+                           [bindLabel]="'name'" [bindValue]="'name'" [closeOnSelect]="true"
+                           [itemList]="languageList" [item]="language" [label]="a.label" [clearable]="true">
+      </app-select-template>
     </div>
   </div>
 
@@ -17,7 +25,7 @@
       <div class="item">
         <div class="title d-flex">
           <div class="avatar"><img src="{{d.owner.avatar_url}}" alt=""></div>
-          <h5 class="m-0">{{d.owner.login}}</h5>
+          <h5 class="m-0">{{d.name}}</h5>
         </div>
         <span>{{d.description}}</span>
         <div class="other d-flex">
