@@ -4,6 +4,11 @@
     <button (click)="getRepository()">Click</button>
     <div class="filter">
       <button>Advanced Search</button>
+      <div class="main" *ngFor="let a of advancedFilter">
+        <div class="item">
+          <label>{{a.label}}</label>
+        </div>
+      </div>
     </div>
   </div>
 

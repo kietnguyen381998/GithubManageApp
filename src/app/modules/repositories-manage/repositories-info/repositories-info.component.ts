@@ -7,7 +7,6 @@ import {GithubService} from "../../../_services/github.service";
   styleUrls: ['./repositories-info.component.scss']
 })
 export class RepositoriesInfoComponent implements OnInit {
-  items: any[] = [];
   owner: string = '';
   repositoryName: string = '';
   language: string = '';
@@ -15,13 +14,18 @@ export class RepositoriesInfoComponent implements OnInit {
   updatedDate: string = '';
   page: number = 1;
   perPage: number = 10;
+  advancedFilter: any = [
+    {label: 'Programming Language', type: 'select', show: true},
+    {label: 'Minimum created date', type: 'datepicker', show: true},
+    {label: 'Repositories size', type: 'slider', show: true},
+  ]
 
   dataList: any = [];
   constructor(private gitHubService: GithubService) {
   }
 
   ngOnInit(): void {
-    
+
   }
 
 
