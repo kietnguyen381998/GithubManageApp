@@ -5,6 +5,9 @@ import {DatetimePipe} from "../../_pipe/datetime.pipe";
 import {SelectTemplateComponent} from './select-template/select-template.component';
 import {NgSelectModule} from "@ng-select/ng-select";
 import {RouterModule} from "@angular/router";
+import {MatSliderModule} from '@angular/material/slider';
+import {MatDatepickerModule} from "@angular/material/datepicker";
+import {MatNativeDateModule} from "@angular/material/core";
 
 const COMPONENT = [
   DatetimePipe,
@@ -17,12 +20,14 @@ const MODULE = [
   ReactiveFormsModule,
   RouterModule,
   NgSelectModule,
+  MatSliderModule,
+  MatDatepickerModule,
+  MatNativeDateModule,
 ]
 
 @NgModule({
   declarations: [
     ...COMPONENT,
-    SelectTemplateComponent,
   ],
   imports: [
     ...MODULE

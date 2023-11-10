@@ -18,6 +18,11 @@
                            [itemList]="languageList" [item]="language" [label]="a.label" [clearable]="true">
       </app-select-template>
     </div>
+    <div class="item" *ngIf="a.type === 'datepicker'">
+      <input type="text" placeholder="Ngày hoàn tất" [(ngModel)]="minUpdatedDate" [matDatepicker]="picker1"/>
+      <mat-datepicker-toggle [for]="picker1"></mat-datepicker-toggle>
+      <mat-datepicker #picker1></mat-datepicker>
+    </div>
   </div>
 
   <div class="main">

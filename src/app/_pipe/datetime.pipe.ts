@@ -10,7 +10,7 @@ export class DatetimePipe implements PipeTransform {
     if (!str) {
       return '';
     }
-    const datePipe = new DatePipe('en-US');
+    const datePipe = new DatePipe('en-US', 'UTC');
     const formattedDate = datePipe.transform(str, 'MMM d, y HH:mm:ss');
     return formattedDate || '';
   }

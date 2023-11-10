@@ -11,7 +11,7 @@ export class GithubService {
   constructor(private http: HttpClient) {
   }
 
-  getRepository(owner: string, repositoryName: string, language: string, size: string, updatedDate: string, page: number,
+  getRepository(owner: string, repositoryName: string, language: string, minSize: number, maxSize: number, minUpdatedDate: string, page: number,
                 perPage: number) {
     let query = `q=`;
     if (owner) {
@@ -23,11 +23,11 @@ export class GithubService {
     if (language) {
       query += `language:${language}+`;
     }
-    if (size) {
-      query += `size:${size}+`;
+    if (minUpdatedDate) {
+      query += `pushed:>${minUpdatedDate}+`;
     }
-    if (updatedDate) {
-      query += `pushed:>${updatedDate}+`;
+    if (minSize || minSize.toString() === '0') {
+      query += `size:${minSize}..${maxSize}+`;
     }
     query += `&page=${page}&per_page=${perPage}`;
     query += `&sort=updated&order=desc`;

@@ -1,5 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {GithubService} from "../../../_services/github.service";
+import {GeneralService} from "../../../_services/general.service";
 
 @Component({
   selector: 'app-repositories-info',
@@ -10,8 +11,9 @@ export class RepositoriesInfoComponent implements OnInit {
   owner: string = '';
   repositoryName: string = '';
   language: string = '';
-  size: string = '';
-  updatedDate: string = '';
+  minSize: number = 0;
+  maxSize: number = 104857600;
+  minUpdatedDate = new Date();
   page: number = 1;
   perPage: number = 10;
   advancedFilter: any = [
@@ -24,7 +26,7 @@ export class RepositoriesInfoComponent implements OnInit {
   dataList: any[] = [];
   languageList: any = [];
 
-  constructor(private gitHubService: GithubService) {
+  constructor(private gitHubService: GithubService, private generalService: GeneralService) {
   }
 
   ngOnInit(): void {
@@ -35,7 +37,10 @@ export class RepositoriesInfoComponent implements OnInit {
 
 
   getRepository() {
-    this.gitHubService.getRepository( this.owner, this.repositoryName, this.language, this.size, this.updatedDate, this.page, this.perPage).subscribe(res => {
+    const yesterday = new Date(this.minUpdatedDate);
+    yesterday.setDate(this.minUpdatedDate.getDate() - 1);
+    const date = this.generalService.convertMatDateToYYYYMMDD(yesterday);
+    this.gitHubService.getRepository( this.owner, this.repositoryName, this.language, this.minSize, this.maxSize, date, this.page, this.perPage).subscribe(res => {
       // @ts-ignore
       if (res.total_count > 0 && res.items.length > 0) {
         // @ts-ignore
