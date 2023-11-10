@@ -21,6 +21,7 @@ export class RepositoriesInfoComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    
   }
 
 
@@ -32,5 +33,11 @@ export class RepositoriesInfoComponent implements OnInit {
         this.dataList = res.items
       }
     })
+  }
+
+  eventButton(e: any) {
+    if ((e.keyCode === 13 && !e.shiftKey)) {
+      this.getRepository()
+    }
   }
 }

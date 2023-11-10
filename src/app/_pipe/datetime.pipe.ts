@@ -1,4 +1,5 @@
 import {Pipe, PipeTransform} from '@angular/core';
+import {DatePipe} from "@angular/common";
 
 @Pipe({
   name: 'datetime'
@@ -6,7 +7,11 @@ import {Pipe, PipeTransform} from '@angular/core';
 export class DatetimePipe implements PipeTransform {
 
   transform(str: string) {
-    const date = new Date(str);
-    return date.toISOString().slice(0, 19).replace("T", " ");
+    if (!str) {
+      return '';
+    }
+    const datePipe = new DatePipe('en-US');
+    const formattedDate = datePipe.transform(str, 'MMM d, y HH:mm:ss');
+    return formattedDate || '';
   }
 }

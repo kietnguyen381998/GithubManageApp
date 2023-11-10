@@ -1,6 +1,6 @@
 <div class="repo-info-container">
   <div class="search-container d-flex">
-    <input [(ngModel)]="this.repositoryName">
+    <input [(ngModel)]="this.repositoryName" (keypress)="eventButton($event)">
     <button (click)="getRepository()">Click</button>
     <div class="filter">
       <button>Advanced Search</button>
@@ -12,13 +12,13 @@
       <div class="item">
         <div class="title d-flex">
           <div class="avatar"><img src="{{d.owner.avatar_url}}" alt=""></div>
-          <h3>{{d.owner.login}}</h3>
+          <h5 class="m-0">{{d.owner.login}}</h5>
         </div>
         <span>{{d.description}}</span>
         <div class="other d-flex">
-          <span>{{d.language}}</span>
-          <span>{{d.stargazers_count}}</span>
-          <span>{{d.pushed_at | datetime}}</span>
+          <span *ngIf="d.language">{{d.language}}</span>
+          <span><i class="fas fa-star"></i>{{(d.stargazers_count ?? 0)}}</span>
+          <span *ngIf="d.pushed_at">Updated on {{d.pushed_at | datetime}}</span>
         </div>
       </div>
     </div>
