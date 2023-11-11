@@ -8,10 +8,15 @@ import {RouterModule} from "@angular/router";
 import {MatSliderModule} from '@angular/material/slider';
 import {MatDatepickerModule} from "@angular/material/datepicker";
 import {MatNativeDateModule} from "@angular/material/core";
+import {HeaderComponent} from './header/header.component';
+import {SidebarComponent} from './sidebar/sidebar.component';
+import {MatTooltipModule} from "@angular/material/tooltip";
 
 const COMPONENT = [
   DatetimePipe,
-  SelectTemplateComponent
+  SelectTemplateComponent,
+  HeaderComponent,
+  SidebarComponent,
 ]
 
 const MODULE = [
@@ -23,6 +28,7 @@ const MODULE = [
   MatSliderModule,
   MatDatepickerModule,
   MatNativeDateModule,
+  MatTooltipModule
 ]
 
 @NgModule({

@@ -1,43 +1,120 @@
 <div class="repo-info-container">
-  <div class="search-container d-flex">
-    <input [(ngModel)]="repositoryName" (keypress)="eventButton($event)">
-    <button (click)="getRepository()">Click</button>
-    <div class="filter">
-      <button>Advanced Search</button>
-    </div>
-  </div>
-
-  <div class="main" *ngFor="let a of advancedFilter">
-    <div class="item" *ngIf="a.type === 'input'">
-      <label>{{a.label}}</label>
-      <input [(ngModel)]="owner" (keypress)="eventButton($event)">
-    </div>
-    <div class="item" *ngIf="a.type === 'select'" >
-      <app-select-template (dataEvent)="receiveSelectEvent($event, 'language')"
-                           [bindLabel]="'name'" [bindValue]="'name'" [closeOnSelect]="true"
-                           [itemList]="languageList" [item]="language" [label]="a.label" [clearable]="true">
-      </app-select-template>
-    </div>
-    <div class="item" *ngIf="a.type === 'datepicker'">
-      <input type="text" placeholder="Ngày hoàn tất" [(ngModel)]="minUpdatedDate" [matDatepicker]="picker1"/>
-      <mat-datepicker-toggle [for]="picker1"></mat-datepicker-toggle>
-      <mat-datepicker #picker1></mat-datepicker>
-    </div>
-  </div>
-
-  <div class="main">
-    <div class="list-item" *ngFor="let d of dataList">
-      <div class="item">
-        <div class="title d-flex">
-          <div class="avatar"><img src="{{d.owner.avatar_url}}" alt=""></div>
-          <h5 class="m-0">{{d.name}}</h5>
+  <div class="container-fluid">
+    <div class="card card-primary card-outline">
+      <div class="card-body row">
+        <div class="search-container d-flex col-12 col-md-4">
+          <input [(ngModel)]="repositoryName" (keypress)="eventButton($event)" placeholder="Repositories name">
+          <button (click)="getRepository()"><i class="fas fa-search"></i></button>
+          <div class="search-history" *ngIf="searchHistory.length > 0">
+            <h5>Recent Searches:</h5>
+            <ul>
+              <li *ngFor="let query of searchHistory">
+                <a (click)="runPastSearch(query)">{{ query.repositoryName }}</a>
+              </li>
+            </ul>
+          </div>
         </div>
-        <span>{{d.description}}</span>
-        <div class="other d-flex">
-          <span *ngIf="d.language">{{d.language}}</span>
-          <span><i class="fas fa-star"></i>{{(d.stargazers_count ?? 0)}}</span>
-          <span *ngIf="d.pushed_at">Updated on {{d.pushed_at | datetime}}</span>
+
+        <div class="advanced">
+          <button class="btn btn-info" type="button">
+            <i class="fas fa-plus-circle" style="margin-right: 5px"></i>Add more filter
+          </button>
+          <div class="filter-type">
+            <div class="title">Select filter type</div>
+            <div class="list">
+              <ng-container *ngFor="let l of advancedFilter">
+                <div *ngIf="!l.show" (click)="l.show = true"
+                     class="d-flex justify-content-between align-content-center">{{l.label}}<i
+                  class="fas fa-plus-circle" style="line-height: 1.6; margin-left: 10px"></i></div>
+              </ng-container>
+            </div>
+          </div>
         </div>
+
+        <div class="select-filter">
+          <ng-container *ngFor="let a of advancedFilter">
+            <div class="item" *ngIf="a.type === 'input' && a.show">
+              <label>{{a.label}}</label>
+              <div class="d-flex align-content-center">
+                <input [(ngModel)]="owner" (keypress)="eventButton($event)" placeholder="Enter text...">
+                <button (click)="a.show = false" class="btn btn-danger" type="button">
+                  <i class="fas fa-trash"></i>
+                </button>
+              </div>
+            </div>
+            <div class="item d-flex align-content-center" *ngIf="a.type === 'select' && a.show">
+              <app-select-template (dataEvent)="receiveSelectEvent($event, 'language')"
+                                   [placeholder]="'Select language'"
+                                   [bindLabel]="'name'" [bindValue]="'name'" [closeOnSelect]="true"
+                                   [itemList]="languageList" [item]="language" [label]="a.label" [clearable]="true">
+              </app-select-template>
+              <button (click)="a.show = false" class="btn btn-danger" type="button">
+                <i class="fas fa-trash"></i>
+              </button>
+            </div>
+            <div class="item" *ngIf="a.type === 'datepicker' && a.show">
+              <label>{{a.label}}</label>
+              <div class="d-flex align-content-center">
+                <div class="date-select">
+                  <input type="text" placeholder="Ngày hoàn tất" [(ngModel)]="minUpdatedDate"
+                         [matDatepicker]="picker1"/>
+                  <mat-datepicker-toggle [for]="picker1"></mat-datepicker-toggle>
+                  <mat-datepicker #picker1></mat-datepicker>
+                </div>
+                <button (click)="a.show = false" class="btn btn-danger" type="button">
+                  <i class="fas fa-trash"></i>
+                </button>
+              </div>
+            </div>
+            <div class="item" *ngIf="a.type === 'slider' && a.show">
+              <label>{{a.label}}</label>
+              <div class="example-label-container example-label-horizontal">
+                <label id="example-name-label" class="example-name-label">Max Value</label>
+                <label class="example-value-label" style="margin-left: 5px">{{maxSize}}Mb</label>
+              </div>
+              <mat-slider
+                class="example-margin"
+                [max]="100"
+                [step]="1"
+                [thumbLabel]="true"
+                [(ngModel)]="maxSize"
+                aria-labelledby="example-name-label">
+              </mat-slider>
+              <button (click)="a.show = false" class="btn btn-danger" type="button">
+                <i class="fas fa-trash"></i>
+              </button>
+            </div>
+          </ng-container>
+        </div>
+
+        <ng-container *ngIf="isError">
+          <div class="error">
+            Please enter at least 1 piece of information
+          </div>
+        </ng-container>
+
+        <div class="list-item row" *ngIf="dataList.length > 0">
+          <div class="list-item-inner col-12 col-md-6 col-xl-4" *ngFor="let d of dataList">
+            <div class="item card bg-light" (click)="openDetail(d)">
+              <div class="title d-flex">
+                <div class="avatar"><img src="{{d.owner.avatar_url}}" alt=""></div>
+                <h5 class="m-0">{{d.name}}</h5>
+              </div>
+              <span>{{d.description}}</span>
+              <div class="other d-flex">
+                <span *ngIf="d.language">{{d.language}}</span>
+                <span><i class="fas fa-star"></i>{{(d.stargazers_count ?? 0)}}</span>
+                <span *ngIf="d.pushed_at">Updated on {{d.pushed_at | datetime}}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <ng-container *ngIf="isLoading">
+          <div class="loading">
+            <i class="fas fa-spinner"></i>
+          </div>
+        </ng-container>
       </div>
     </div>
   </div>

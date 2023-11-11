@@ -1,0 +1,24 @@
+<aside class="main-sidebar sidebar-dark-primary elevation-4">
+  <a href="repositories/info" class="brand-link">
+    <img src="favicon.ico" alt="" class="brand-image">
+    <span class="brand-text font-weight-light">
+      Github Management
+    </span>
+  </a>
+
+  <div class="sidebar">
+    <nav class="mt-2">
+      <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+        <ng-container *ngFor="let m of menuList">
+          <li class="nav-item" [ngClass]="this.url && this.url.includes(m.link) ? 'menu-open menu-is-opening' : ''">
+            <a [routerLink]="m['link']" class="nav-link"
+               [ngClass]="this.url && this.url.includes(m.link) ? 'active' : ''">
+              <i class="nav-icon" [ngClass]="m.icon" style="margin-right: 0.4rem"></i>
+              <p>{{m.title}}</p>
+            </a>
+          </li>
+        </ng-container>
+      </ul>
+    </nav>
+  </div>
+</aside>

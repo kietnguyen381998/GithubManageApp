@@ -1,3 +1,69 @@
 /* You can add global styles to this file, and also import other style files */
 @import "~@angular/material/prebuilt-themes/indigo-pink.css";
 @import "~@ng-select/ng-select/themes/default.theme.css";
+
+.item {
+  .date-select {
+    position: relative;
+
+    &:hover {
+      cursor: pointer;
+    }
+
+    input {
+      width: 100%;
+      padding: 4px 10px;
+      border-radius: 4px;
+      border: 1px solid #dbdbdb;
+    }
+
+    .mat-datepicker-toggle {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      left: 0;
+
+      .mat-icon-button {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 92%;
+        margin-left: auto;
+        border: 1px solid #a7a7a7;
+        border-radius: 3px;
+      }
+    }
+  }
+
+  &.date-range {
+    .date-select {
+      .mat-date-range-input {
+        .mat-date-range-input-container {
+          width: 100%;
+          padding: 4px 10px;
+          border-radius: 4px;
+          border: 1px solid #dbdbdb;
+
+          input {
+            width: initial !important;
+            padding: 0 !important;
+            border-radius: 0 !important;
+            border: none !important;
+          }
+        }
+      }
+
+      .mat-datepicker-toggle {
+        top: 0;
+      }
+    }
+  }
+
+  label {
+    margin-bottom: 0.3rem;
+  }
+}
+
+.mat-slider-horizontal {
+  width: 80%;
+}

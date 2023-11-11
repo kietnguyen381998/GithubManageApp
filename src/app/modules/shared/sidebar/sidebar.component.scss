@@ -1,0 +1,73 @@
+.main-sidebar {
+  //z-index: 100000;
+  //background: linear-gradient(180deg, rgba(32,54,76,1) 0%, rgba(16,65,115,1) 79%);
+  //background: linear-gradient(170deg, rgba(32,54,76,1) 0%, rgba(15,38,61,0.9612219887955182) 73%);
+
+  background: linear-gradient(180deg, #1d3247 0%, #1c558c 46%, #0f6272 76%);
+  //background: linear-gradient(180deg, rgba(32,54,76,1) 0%, rgba(26,80,133,0.9304096638655462) 46%, rgba(14,94,110,0.9528186274509804) 76%);
+  //background: linear-gradient(180deg, rgba(32,54,76,1) 0%, rgba(26,80,133,0.8883928571428571) 46%, rgba(14,94,110,0.8603816526610644) 76%);
+  .brand-link {
+    display: flex;
+    background-color: #20364c !important;
+
+    .brand-image {
+      &.text {
+        width: 70px;
+        object-fit: cover;
+        position: absolute;
+        top: 18px;
+        left: 42px;
+      }
+    }
+  }
+
+  .sidebar {
+    &.os-host-overflow-x {
+      .user-panel {
+        .info {
+          a {
+            white-space: nowrap;
+          }
+        }
+      }
+    }
+
+    .user-panel {
+      align-items: center;
+
+      .info {
+        a {
+          white-space: break-spaces;
+        }
+      }
+    }
+
+    .nav-sidebar {
+      .nav-item {
+        &:hover {
+          cursor: pointer;
+        }
+
+        .nav-link {
+          &.logout {
+            display: none;
+          }
+        }
+
+        .nav-item {
+          .nav-item {
+            .nav-link {
+              &.active {
+                background-color: rgb(207 207 207 / 39%);
+                color: white;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+@media only screen and (max-width: 767px) {
+}
