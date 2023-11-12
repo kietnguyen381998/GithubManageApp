@@ -5,6 +5,7 @@ import {AppComponent} from './app.component';
 import {SharedModule} from "./modules/shared/shared.module";
 import {HttpClientModule} from "@angular/common/http";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
+import {OAuthModule} from "angular-oauth2-oidc";
 
 @NgModule({
   declarations: [
@@ -16,6 +17,7 @@ import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
     SharedModule,
     HttpClientModule,
     BrowserAnimationsModule,
+    OAuthModule.forRoot(),
   ],
   providers: [],
   exports: [],

@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import {AuthService} from "../../../_services/auth.service";
 
 @Component({
   selector: 'app-header',
@@ -8,7 +9,7 @@ import { Component, OnInit } from '@angular/core';
 export class HeaderComponent implements OnInit {
   userName = 'Guest';
   userAva = 'favicon.ico';
-  constructor() {}
+  constructor(private authService: AuthService) {}
 
   ngOnInit(): void {
     if (localStorage.getItem('isOpenSidebar') === 'close') {
@@ -17,8 +18,16 @@ export class HeaderComponent implements OnInit {
     }
   }
 
-  logout() {
+  isAuthenticated(): boolean {
+    return this.authService.isAuthenticated();
+  }
 
+  getUsername(): string {
+    return this.authService.getUsername();
+  }
+
+  logout() {
+    this.authService.logout()
   }
 
   toggleMenu() {

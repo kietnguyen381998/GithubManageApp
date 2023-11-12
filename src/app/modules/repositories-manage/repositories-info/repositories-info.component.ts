@@ -4,6 +4,8 @@ import {GeneralService} from "../../../_services/general.service";
 import {HistoryService} from "../../../_services/history.service";
 import {GitHubRepository, ItemLanguage} from "../../../_models/repository.model";
 import {ItemHistory} from "../../../_models/history.model";
+import {AuthService} from "../../../_services/auth.service";
+
 
 @Component({
   selector: 'app-repositories-info',
@@ -20,7 +22,7 @@ export class RepositoriesInfoComponent implements OnInit {
     minUpdatedDate: null
   }
   page = 1;
-  perPage = 15;
+  perPage = 14;
   languageList: ItemLanguage[] = [];
   advancedFilter = [
     {label: 'Owner', variable: 'owner', type: 'input', show: false, default: ''},
@@ -36,7 +38,8 @@ export class RepositoriesInfoComponent implements OnInit {
   isError = false;
   isNull = false;
 
-  constructor(private gitHubService: GithubService, private generalService: GeneralService, private historyService: HistoryService) {
+  constructor(private gitHubService: GithubService, private generalService: GeneralService,
+              private historyService: HistoryService, private authService: AuthService,) {
   }
 
   ngOnInit(): void {
@@ -44,8 +47,8 @@ export class RepositoriesInfoComponent implements OnInit {
     this.gitHubService.getLanguage().subscribe(res => {
       this.languageList = res;
     })
+    this.authService.configureOAuth();
   }
-
 
   getRepository(item?: ItemHistory) {
     let date = '';
@@ -74,6 +77,7 @@ export class RepositoriesInfoComponent implements OnInit {
         query += `size:${this.searchInput.minSize}..${this.searchInput.maxSize * 1024 * 1024}+`;
       }
       if (query === `q=`) {
+        query = '';
         this.isError = true;
       } else {
         query += `&page=${this.page}&per_page=${this.perPage}`;
@@ -110,9 +114,9 @@ export class RepositoriesInfoComponent implements OnInit {
         this.searchHistory = this.historyService.getHistory();
       }, error => {
         this.isLoading = false;
+        this.isNull = true;
+        this.dataList = [];
       })
-    } else {
-      this.isNull = true;
     }
   }
 

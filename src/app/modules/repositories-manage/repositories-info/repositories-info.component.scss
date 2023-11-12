@@ -3,6 +3,7 @@
 
   .card {
     .card-body {
+      padding-bottom: 0.8rem;
       .search-container {
         position: relative;
         margin-bottom: 0.8rem;
@@ -30,22 +31,29 @@
           background-color: white;
           box-shadow: 0 1px 3px #acacac;
           border-radius: 5px;
-          padding: 10px;
           white-space: nowrap;
 
           h5 {
             border-bottom: 1px solid #cfcccc;
+            padding: 10px;
+            font-size: 0.8rem;
+            margin: 0;
           }
 
           ul {
-            padding: 0 0 5px 0;
+            padding: 0;
             margin-bottom: 0;
 
             li {
               list-style-type: none;
               cursor: pointer;
               border-bottom: 1px solid #cfcccc;
-              padding: 5px;
+              padding: 5px 10px;
+              transition: all 0.1s;
+
+              &:hover {
+                background-color: #ededed;
+              }
             }
           }
         }
@@ -76,19 +84,28 @@
           background-color: white;
           box-shadow: 0 1px 3px #acacac;
           border-radius: 5px;
-          padding: 10px;
           white-space: nowrap;
 
           .title {
             text-align: center;
-            border-bottom: 1px solid black;
-            margin: 0 -10px 5px;
-            padding: 0 5px 5px;
+            border-bottom: 1px solid #e4e4e4;
+            margin: 0;
+            padding: 10px 5px;
           }
 
           .list {
             div {
               cursor: pointer;
+              padding: 10px;
+              transition: all 0.1s;
+
+              &:hover {
+                background-color: #ededed;
+              }
+            }
+
+            i {
+              color: #79a9ff;
             }
           }
         }
@@ -131,6 +148,11 @@
           display: flex;
           flex-direction: column;
           justify-content: space-between;
+          transition: all 0.1s;
+
+          &:hover {
+            background-color: white !important;
+          }
 
           .title {
             align-items: center;

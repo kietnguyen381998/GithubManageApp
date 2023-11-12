@@ -3,13 +3,20 @@
     <div class="card card-primary card-outline">
       <div class="card-body row">
         <div class="search-container d-flex col-12 col-md-4">
-          <input [(ngModel)]="searchInput.repositoryName" (keypress)="eventButton($event)" placeholder="Repositories name">
+          <input [(ngModel)]="searchInput.repositoryName" (keypress)="eventButton($event)"
+                 placeholder="Repositories name">
           <button (click)="getRepository()"><i class="fas fa-search"></i></button>
           <div class="search-history" *ngIf="searchHistory.length > 0">
             <h5>Recent Searches:</h5>
             <ul>
               <li *ngFor="let item of searchHistory" (click)="runPastSearch(item)">
-                <a>{{ item.repositoryName }}</a>
+                <a>
+                  <ng-container *ngIf="item.repositoryName">{{ item.repositoryName }}</ng-container>
+                  <ng-container *ngIf="item.owner"></ng-container>
+                  <ng-container *ngIf="item.owner">|{{ item.owner }}</ng-container>
+                  <ng-container *ngIf="item.language">|{{ item.language }}</ng-container>
+                  <ng-container *ngIf="item.date">|{{ item.maxSize }}</ng-container>
+                </a>
               </li>
             </ul>
           </div>
@@ -46,7 +53,8 @@
               <app-select-template (dataEvent)="receiveSelectEvent($event)"
                                    [placeholder]="'Select language'"
                                    [bindLabel]="'name'" [bindValue]="'name'" [closeOnSelect]="true"
-                                   [itemList]="languageList" [item]="searchInput.language" [label]="a.label" [clearable]="true">
+                                   [itemList]="languageList" [item]="searchInput.language" [label]="a.label"
+                                   [clearable]="true">
               </app-select-template>
               <button (click)="selectFilterEvent(a, false)" class="btn btn-danger" type="button">
                 <i class="fas fa-trash"></i>
@@ -94,8 +102,8 @@
         </ng-container>
 
         <div class="list-item row" *ngIf="dataList.length > 0">
-          <div class="list-item-inner col-12 col-md-6 col-xl-4" *ngFor="let d of dataList">
-            <div class="item card bg-light" (click)="openDetail(d)">
+          <div class="list-item-inner col-12 col-md-6" *ngFor="let d of dataList">
+            <div class="item bg-light" (click)="openDetail(d)">
               <div class="title d-flex">
                 <div class="avatar"><img src="{{d.owner.avatar_url}}" alt=""></div>
                 <h5 class="m-0">{{d.name}}</h5>
@@ -110,7 +118,7 @@
           </div>
         </div>
 
-        <div class="loading"  *ngIf="isLoading">
+        <div class="loading" *ngIf="isLoading">
           <i class="fas fa-spinner"></i>
         </div>
 
