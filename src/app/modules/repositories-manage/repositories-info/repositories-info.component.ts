@@ -17,10 +17,10 @@ export class RepositoriesInfoComponent implements OnInit {
     language: '',
     minSize: null,
     maxSize: null,
-    minUpdatedDate: null,
-    page: 1,
-    perPage: 15,
+    minUpdatedDate: null
   }
+  page = 1;
+  perPage = 15;
   languageList: ItemLanguage[] = [];
   advancedFilter = [
     {label: 'Owner', variable: 'owner', type: 'input', show: false, default: ''},
@@ -76,7 +76,7 @@ export class RepositoriesInfoComponent implements OnInit {
       if (query === `q=`) {
         this.isError = true;
       } else {
-        query += `&page=${this.searchInput.page}&per_page=${this.searchInput.perPage}`;
+        query += `&page=${this.page}&per_page=${this.perPage}`;
         query += `&sort=updated&order=desc`;
         this.isError = false;
       }
@@ -87,26 +87,28 @@ export class RepositoriesInfoComponent implements OnInit {
       this.gitHubService.getRepository(query).subscribe(res => {
         this.isLoading = false;
         if (res.total_count && res.total_count > 0 && res.items && res.items.length > 0) {
-          if (this.searchHistory.length > 0 && this.searchInput.repositoryName === this.searchHistory[0].repositoryName
-            && this.searchInput.owner === this.searchHistory[0].owner
-            && this.searchInput.language === this.searchHistory[0].language
-            && this.searchInput.minSize === this.searchHistory[0].minSize
-            && this.searchInput.maxSize === this.searchHistory[0].maxSize
-            && this.searchInput.page !== this.searchHistory[0].page
-            && this.searchInput.perPage !== this.searchHistory[0].perPage)
+          const history = this.searchHistory[0];
+          if (this.searchHistory.length > 0 && this.searchInput.repositoryName === history.repositoryName
+            && this.searchInput.owner === history.owner
+            && this.searchInput.language === history.language
+            && this.searchInput.minSize === history.minSize
+            && this.searchInput.maxSize === history.maxSize
+            && this.page !== 1) {
             this.dataList = this.dataList.concat(res.items);
-          else {
-
+          } else {
+            this.dataList = res.items;
           }
+        } else {
+          this.isNull = true;
+          this.dataList = [];
         }
         if (item) {
           this.historyService.addToHistory(item);
         } else {
-          this.historyService.addToHistory(Object.assign(this.searchInput, query));
+          this.historyService.addToHistory(Object.assign(this.searchInput, {query: query}));
         }
         this.searchHistory = this.historyService.getHistory();
       }, error => {
-        this.dataList = [];
         this.isLoading = false;
       })
     } else {
@@ -128,6 +130,14 @@ export class RepositoriesInfoComponent implements OnInit {
       this.searchInput[item.variable] = item.default;
     } else {
       item.show = false;
+      if (item.default instanceof Date) {
+        this.searchInput[item.variable] = null;
+      } else if (typeof item.default === 'number') {
+        this.searchInput[item.variable] = null;
+      }
+      else {
+        this.searchInput[item.variable] = item.default;
+      }
     }
   }
 
@@ -150,7 +160,7 @@ export class RepositoriesInfoComponent implements OnInit {
       const windowBottom = windowHeight + window.pageYOffset;
 
       if (windowBottom >= docHeight - 1) {
-        this.searchInput.page++;
+        this.page++;
         this.getRepository();
       }
     }

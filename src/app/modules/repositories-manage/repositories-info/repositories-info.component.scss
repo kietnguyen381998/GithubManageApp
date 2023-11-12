@@ -184,6 +184,16 @@
       .error {
         color: red;
       }
+
+      .nodata {
+        display: flex;
+        justify-content: center;
+
+        img {
+          width: 50%;
+          object-fit: contain;
+        }
+      }
     }
   }
 

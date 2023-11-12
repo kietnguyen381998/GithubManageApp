@@ -3,9 +3,8 @@ export interface ItemHistory {
   owner: string,
   repositoryName: string,
   language: string,
-  minSize: number,
-  maxSize: number,
+  minSize: number | null,
+  maxSize: number | null,
   date: string,
-  page: number,
-  perPage: number,
+  [key: string]: any;
 }

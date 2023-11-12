@@ -11,7 +11,7 @@ export class HistoryService {
     return this.searchHistory;
   }
 
-  addToHistory({query, repositoryName, owner, language, minSize, maxSize, date, page, perPage}: ItemHistory): void {
+  addToHistory({query, repositoryName, owner, language, minSize, maxSize, date}: ItemHistory): void {
     this.searchHistory = this.searchHistory.filter(item => item.repositoryName !== repositoryName
       || item.owner !== owner || item.language !== language || item.minSize !== minSize || item.maxSize !== maxSize || item.date !== date);
     this.searchHistory.unshift({
@@ -22,8 +22,6 @@ export class HistoryService {
       minSize,
       maxSize,
       date,
-      page,
-      perPage
     });
     if (this.searchHistory.length > 5) {
       this.searchHistory = this.searchHistory.slice(0, 5);
