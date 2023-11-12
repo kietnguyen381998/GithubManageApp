@@ -1,8 +1,9 @@
 import {Component, HostListener, OnInit} from '@angular/core';
 import {GithubService} from "../../../_services/github.service";
 import {GeneralService} from "../../../_services/general.service";
-import {query} from "@angular/animations";
 import {HistoryService} from "../../../_services/history.service";
+import {GitHubRepository, ItemLanguage} from "../../../_models/repository.model";
+import {ItemHistory} from "../../../_models/history.model";
 
 @Component({
   selector: 'app-repositories-info',
@@ -10,27 +11,30 @@ import {HistoryService} from "../../../_services/history.service";
   styleUrls: ['./repositories-info.component.scss']
 })
 export class RepositoriesInfoComponent implements OnInit {
-  owner: string = '';
-  repositoryName: string = '';
-  language: string = '';
-  minSize: number = 0;
-  maxSize: number = 100;
-  minUpdatedDate = new Date();
-  page: number = 1;
-  perPage: number = 15;
-  languageList: any = [];
-  advancedFilter: any = [
-    {label: 'Owner', type: 'input', show: false},
-    {label: 'Programming Language', type: 'select', show: false},
-    {label: 'Minimum created date', type: 'datepicker', show: false},
-    {label: 'Repositories size', type: 'slider', show: false},
+  searchInput: any = {
+    repositoryName: '',
+    owner: '',
+    language: '',
+    minSize: null,
+    maxSize: null,
+    minUpdatedDate: null,
+    page: 1,
+    perPage: 15,
+  }
+  languageList: ItemLanguage[] = [];
+  advancedFilter = [
+    {label: 'Owner', variable: 'owner', type: 'input', show: false, default: ''},
+    {label: 'Programming Language', variable: 'language', type: 'select', show: false, default: ''},
+    {label: 'Minimum created date', variable: 'minUpdatedDate', type: 'datepicker', show: false, default: new Date()},
+    {label: 'Repositories size', variable: 'maxSize', type: 'slider', show: false, default: 100},
   ]
 
-  dataList: any[] = [];
-  searchHistory: any [] = []
+  dataList: GitHubRepository[] = [];
+  searchHistory: ItemHistory [] = []
 
   isLoading = false;
   isError = false;
+  isNull = false;
 
   constructor(private gitHubService: GithubService, private generalService: GeneralService, private historyService: HistoryService) {
   }
@@ -43,71 +47,92 @@ export class RepositoriesInfoComponent implements OnInit {
   }
 
 
-  getRepository(str?: string) {
-    let date = ''
-    for (const i of this.advancedFilter) {
-      if (i.type === 'datepicker' && i.show === true) {
-        const yesterday = new Date(this.minUpdatedDate);
-        yesterday.setDate(this.minUpdatedDate.getDate() - 1);
+  getRepository(item?: ItemHistory) {
+    let date = '';
+    let query = ``;
+    if (item) {
+      query = item.query;
+    } else {
+      query = `q=`;
+      if (this.searchInput.repositoryName) {
+        query += `${this.searchInput.repositoryName}+`;
+      }
+      if (this.searchInput.owner) {
+        query += `user:${this.searchInput.owner}+`;
+      }
+      if (this.searchInput.language) {
+        query += `language:${this.searchInput.language}+`;
+      }
+      if (this.searchInput.minUpdatedDate) {
+        const yesterday = new Date(this.searchInput.minUpdatedDate);
+        yesterday.setDate(this.searchInput.minUpdatedDate.getDate() - 1);
         date = this.generalService.convertMatDateToYYYYMMDD(yesterday);
+        query += `pushed:>${date}+`;
+      }
+      if (this.searchInput.maxSize || (this.searchInput.maxSize !== null && this.searchInput.maxSize.toString() === '0')) {
+        this.searchInput.minSize = 0;
+        query += `size:${this.searchInput.minSize}..${this.searchInput.maxSize * 1024 * 1024}+`;
+      }
+      if (query === `q=`) {
+        this.isError = true;
+      } else {
+        query += `&page=${this.searchInput.page}&per_page=${this.searchInput.perPage}`;
+        query += `&sort=updated&order=desc`;
+        this.isError = false;
       }
     }
-    if (!this.owner && !this.repositoryName && !this.language && !date && !this.maxSize) {
-      this.isError = true;
-    } else {
-      this.isError = false;
-      let query = `q=`;
-      if (str) {
-        query = str
-      } else {
-        if (this.owner) {
-          query += `user:${this.owner}+`;
-        }
-        if (this.repositoryName) {
-          query += `${this.repositoryName}+`;
-        }
-        if (this.language) {
-          query += `language:${this.language}+`;
-        }
-        if (date) {
-          query += `pushed:>${date}+`;
-        }
-        if (this.maxSize || this.maxSize.toString() === '0') {
-          query += `size:${this.minSize}..${this.maxSize*1024*1024}+`;
-        }
-        query += `&page=${this.page}&per_page=${this.perPage}`;
-        query += `&sort=updated&order=desc`;
-      }
+    if (query !== ``) {
       this.isLoading = true;
+      this.isNull = false;
       this.gitHubService.getRepository(query).subscribe(res => {
-        this.isLoading = false
-        // @ts-ignore
+        this.isLoading = false;
         if (res.total_count && res.total_count > 0 && res.items && res.items.length > 0) {
-          // @ts-ignore
-          this.dataList = this.dataList.concat(res.items);
-          this.historyService.addToHistory(query, this.owner, this.repositoryName, this.language, this.maxSize, date);
-          this.searchHistory = this.historyService.getHistory();
+          if (this.searchHistory.length > 0 && this.searchInput.repositoryName === this.searchHistory[0].repositoryName
+            && this.searchInput.owner === this.searchHistory[0].owner
+            && this.searchInput.language === this.searchHistory[0].language
+            && this.searchInput.minSize === this.searchHistory[0].minSize
+            && this.searchInput.maxSize === this.searchHistory[0].maxSize
+            && this.searchInput.page !== this.searchHistory[0].page
+            && this.searchInput.perPage !== this.searchHistory[0].perPage)
+            this.dataList = this.dataList.concat(res.items);
+          else {
+
+          }
         }
+        if (item) {
+          this.historyService.addToHistory(item);
+        } else {
+          this.historyService.addToHistory(Object.assign(this.searchInput, query));
+        }
+        this.searchHistory = this.historyService.getHistory();
       }, error => {
         this.dataList = [];
         this.isLoading = false;
       })
+    } else {
+      this.isNull = true;
     }
   }
 
-  openDetail(obj: any) {
-    this.gitHubService.getRepositoryURL(obj.owner.login, obj.name).subscribe((res: any) => {
-      window.open(res.html_url, '_blank');
-    })
+  openDetail(obj: GitHubRepository) {
+    window.open(obj.html_url, '_blank');
   }
 
-  runPastSearch(query: any): void {
-    this.getRepository(query.query);
+  runPastSearch(item: ItemHistory): void {
+    this.getRepository(item);
   }
 
-  receiveSelectEvent(e: any, str: string) {
-    // @ts-ignore
-    this[str] = e;
+  selectFilterEvent(item: any, isShow: boolean) {
+    if (isShow) {
+      item.show = true;
+      this.searchInput[item.variable] = item.default;
+    } else {
+      item.show = false;
+    }
+  }
+
+  receiveSelectEvent(e: string) {
+    this.searchInput.language = e;
   }
 
   eventButton(e: any) {
@@ -125,7 +150,7 @@ export class RepositoriesInfoComponent implements OnInit {
       const windowBottom = windowHeight + window.pageYOffset;
 
       if (windowBottom >= docHeight - 1) {
-        this.page++;
+        this.searchInput.page++;
         this.getRepository();
       }
     }

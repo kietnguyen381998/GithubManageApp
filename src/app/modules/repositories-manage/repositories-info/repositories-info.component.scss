@@ -16,6 +16,10 @@
           background: none;
           border-left: 2px solid #dbdbdb;
           padding: 0 15px;
+
+          &:hover {
+            background: #cdcdcd;
+          }
         }
 
         .search-history {

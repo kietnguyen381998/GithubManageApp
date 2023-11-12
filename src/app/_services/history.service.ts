@@ -1,24 +1,29 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
+import {ItemHistory} from "../_models/history.model";
 
 @Injectable({
   providedIn: 'root'
 })
 export class HistoryService {
-  private searchHistory: any[] = [];
+  private searchHistory: ItemHistory[] = [];
 
-  getHistory(): string[] {
+  getHistory(): ItemHistory[] {
     return this.searchHistory;
   }
 
-  addToHistory(query: string, owner: string, repositoryName: string, language: string, maxSize: any, date: any): void {
-    this.searchHistory = this.searchHistory.filter(item => item !== query);
+  addToHistory({query, repositoryName, owner, language, minSize, maxSize, date, page, perPage}: ItemHistory): void {
+    this.searchHistory = this.searchHistory.filter(item => item.repositoryName !== repositoryName
+      || item.owner !== owner || item.language !== language || item.minSize !== minSize || item.maxSize !== maxSize || item.date !== date);
     this.searchHistory.unshift({
       query,
-      owner,
       repositoryName,
+      owner,
       language,
+      minSize,
       maxSize,
-      date
+      date,
+      page,
+      perPage
     });
     if (this.searchHistory.length > 5) {
       this.searchHistory = this.searchHistory.slice(0, 5);

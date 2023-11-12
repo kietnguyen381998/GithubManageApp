@@ -1,5 +1,7 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
+import {Observable} from "rxjs";
+import {ItemLanguage, ResponseSearchGithubRepos} from "../_models/repository.model";
 
 @Injectable({
   providedIn: 'root'
@@ -11,17 +13,12 @@ export class GithubService {
   constructor(private http: HttpClient) {
   }
 
-  getRepository(query: string) {
+  getRepository(query: string): Observable<ResponseSearchGithubRepos> {
     const url = `${this.apiUrl}/search/repositories?${query}`;
-    return this.http.get(url);
+    return this.http.get<ResponseSearchGithubRepos>(url);
   }
 
-  getRepositoryURL(owner: string, repo: string) {
-    const url = `${this.apiUrl}/repos/${owner}/${repo}`;
-    return this.http.get(url);
-  }
-
-  getLanguage() {
-    return this.http.get(`${this.apiUrl}/languages`);
+  getLanguage(): Observable<ItemLanguage[]> {
+    return this.http.get<ItemLanguage[]>(`${this.apiUrl}/languages`);
   }
 }
