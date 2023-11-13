@@ -16,14 +16,8 @@ export class HeaderComponent implements OnInit {
       const a: any = document.getElementById('body-container');
       a.classList.add('sidebar-collapse');
     }
-  }
-
-  isAuthenticated(): boolean {
-    return this.authService.isAuthenticated();
-  }
-
-  getUsername(): string {
-    return this.authService.getUsername();
+    this.userName = this.authService.getUsername();
+    this.userAva = this.authService.getUserAva();
   }
 
   logout() {

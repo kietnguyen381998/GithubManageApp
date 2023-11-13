@@ -4,7 +4,6 @@ import {GeneralService} from "../../../_services/general.service";
 import {HistoryService} from "../../../_services/history.service";
 import {GitHubRepository, ItemLanguage} from "../../../_models/repository.model";
 import {ItemHistory} from "../../../_models/history.model";
-import {AuthService} from "../../../_services/auth.service";
 
 
 @Component({
@@ -39,7 +38,7 @@ export class RepositoriesInfoComponent implements OnInit {
   isNull = false;
 
   constructor(private gitHubService: GithubService, private generalService: GeneralService,
-              private historyService: HistoryService, private authService: AuthService,) {
+              private historyService: HistoryService) {
   }
 
   ngOnInit(): void {
@@ -47,7 +46,6 @@ export class RepositoriesInfoComponent implements OnInit {
     this.gitHubService.getLanguage().subscribe(res => {
       this.languageList = res;
     })
-    this.authService.configureOAuth();
   }
 
   getRepository(item?: ItemHistory) {

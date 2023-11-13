@@ -1,48 +1,50 @@
 import {Injectable} from '@angular/core';
-import {AuthConfig, OAuthService} from "angular-oauth2-oidc";
-import {JwksValidationHandler} from 'angular-oauth2-oidc-jwks';
+import {HttpClient} from "@angular/common/http";
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  private authConfig: AuthConfig = {
-    issuer: 'http://localhost:3000/login/oauth',
-    redirectUri: 'http://localhost:4200/repositories/info',
-    clientId: 'b88b3e32ca5bc94ac5b2',
-    responseType: 'code',
-    scope: 'openid profile email offline_access api',
-    showDebugInformation: true,
-    requireHttps: false,
-    loginUrl: 'https://github.com/login/oauth/authorize',
-    tokenEndpoint: 'https://github.com/login/oauth/access_token',
-    userinfoEndpoint: 'https://api.github.com/user',
-    logoutUrl: 'https://github.com/logout',
-  };
 
-  constructor(private oauthService: OAuthService) {
+  constructor(private http: HttpClient) {
   }
 
-  configureOAuth(): void {
-    this.oauthService.configure(this.authConfig);
-    this.oauthService.tokenValidationHandler = new JwksValidationHandler();
-    this.oauthService.loadDiscoveryDocumentAndTryLogin();
-  }
 
   loginWithGitHub(): void {
-    this.oauthService.initImplicitFlow();
+    window.location.assign('https://github.com/login/oauth/authorize?client_id=b88b3e32ca5bc94ac5b2')
   }
 
-  isAuthenticated(): boolean {
-    return this.oauthService.hasValidAccessToken();
+  getAccessToken(code: string) {
+    return this.http.get<any>('http://localhost:3000/getAccessToken?code=' + code);
   }
 
-  getUsername(): string {
-    const claims: any = this.oauthService.getIdentityClaims();
-    return claims ? claims['preferred_username'] : '';
+  getUserData() {
+    return this.http.get<any>('http://localhost:3000/getUserData');
+  }
+
+  getUsername() {
+    if (sessionStorage.getItem('userInfo')) {
+      return JSON.parse(sessionStorage.getItem('userInfo') as string)['login'];
+    } else {
+      return 'Guest';
+    }
+  }
+
+  getUserAva() {
+    if (sessionStorage.getItem('userInfo')) {
+      return JSON.parse(sessionStorage.getItem('userInfo') as string)['avatar_url'];
+    } else {
+      return 'favicon.ico';
+    }
   }
 
   logout() {
-    this.oauthService.logOut();
+    this.deleteLocalStorage();
+    window.location.href = '/'
+  }
+
+  deleteLocalStorage() {
+    localStorage.removeItem('accessToken');
+    localStorage.removeItem('userInfo');
   }
 }
