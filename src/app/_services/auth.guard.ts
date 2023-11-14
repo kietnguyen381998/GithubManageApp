@@ -21,6 +21,7 @@ export class AuthGuard implements CanActivate {
           localStorage.setItem("accessToken", res.access_token);
           this.authService.getUserData().subscribe((res1) => {
             sessionStorage.setItem("userInfo", JSON.stringify(res1));
+            this.authService.emitChange(res1);
           })
         }
       })
@@ -28,6 +29,7 @@ export class AuthGuard implements CanActivate {
     } else if (localStorage.getItem("accessToken")) {
       this.authService.getUserData().subscribe((res) => {
         sessionStorage.setItem("userInfo", JSON.stringify(res));
+        this.authService.emitChange(res);
       })
       return true;
     }

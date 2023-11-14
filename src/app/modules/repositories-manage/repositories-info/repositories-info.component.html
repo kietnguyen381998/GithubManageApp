@@ -111,7 +111,7 @@
               <span>{{d.description}}</span>
               <div class="other d-flex">
                 <span *ngIf="d.language">{{d.language}}</span>
-                <span><i class="fas fa-star"></i>{{d.stargazers_count}}</span>
+                <span><i class="fas fa-star" style="margin-right: 3px"></i>{{d.stargazers_count}}</span>
                 <span *ngIf="d.pushed_at">Updated on {{d.pushed_at | datetime}}</span>
               </div>
             </div>

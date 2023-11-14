@@ -12,12 +12,16 @@ export class HeaderComponent implements OnInit {
   constructor(private authService: AuthService) {}
 
   ngOnInit(): void {
+    this.authService.changeEmitted$.subscribe((res) => {
+      if (res) {
+        this.userName = this.authService.getUsername();
+        this.userAva = this.authService.getUserAva();
+      }
+    })
     if (localStorage.getItem('isOpenSidebar') === 'close') {
       const a: any = document.getElementById('body-container');
       a.classList.add('sidebar-collapse');
     }
-    this.userName = this.authService.getUsername();
-    this.userAva = this.authService.getUserAva();
   }
 
   logout() {

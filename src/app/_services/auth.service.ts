@@ -1,14 +1,20 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
+import {Subject} from "rxjs";
+import {User} from "../_models/user.model";
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-
+  private changEmitted = new Subject<any>();
+  changeEmitted$ = this.changEmitted.asObservable();
   constructor(private http: HttpClient) {
   }
 
+  emitChange(obj: User): any {
+    this.changEmitted.next(obj);
+  }
 
   loginWithGitHub(): void {
     window.location.assign('https://github.com/login/oauth/authorize?client_id=b88b3e32ca5bc94ac5b2')

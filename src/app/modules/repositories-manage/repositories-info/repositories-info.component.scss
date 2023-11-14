@@ -170,6 +170,10 @@
                 width: 100%;
               }
             }
+
+            h5 {
+              color: #0c7bd9
+            }
           }
 
           span {
@@ -182,8 +186,9 @@
 
           .other {
             margin-top: 0.4rem;
-            font-weight: bold;
             font-size: 13px;
+            color: #8f8f8f;
+            font-weight: normal;
 
             span {
               margin-right: 1rem;
