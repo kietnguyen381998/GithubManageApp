@@ -24,6 +24,10 @@ export class HeaderComponent implements OnInit {
     }
   }
 
+  login() {
+    this.authService.loginWithGitHub();
+  }
+
   logout() {
     this.authService.logout()
   }

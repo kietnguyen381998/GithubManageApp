@@ -17,9 +17,7 @@ export class SidebarComponent implements OnInit, OnDestroy {
   constructor(private router: Router) {
     this.subscribe = this.router.events.subscribe((event) => {
       if (event instanceof NavigationEnd) {
-        if (event.url) {
-          this.url = event.url;
-        }
+        this.url = this.router.url;
       }
     });
   }

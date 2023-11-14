@@ -16,7 +16,10 @@
         </div>
       </a>
       <div class="dropdown-menu dropdown-menu-right">
-        <a href="javascript:void(0);" class="dropdown-item" (click)="logout()">
+        <a *ngIf="userName === 'Guest'" href="javascript:void(0);" class="dropdown-item" (click)="login()">
+          <i class="fas fa-sign-out-alt mr-2"></i>Log in
+        </a>
+        <a *ngIf="userName !== 'Guest'" href="javascript:void(0);" class="dropdown-item" (click)="logout()">
           <i class="fas fa-sign-out-alt mr-2"></i>Log out
         </a>
       </div>
